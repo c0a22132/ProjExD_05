@@ -61,7 +61,7 @@ while True:
                     exec(open("ex05/Resource/script/main.py", encoding="utf-8").read())
                     pass
                 elif selected == "score" or selected == "settings":
-                    #実装予定
+                    exec(open("ex05/Resource/script/score.py", encoding="utf-8").read())
                     pass
                 elif selected == "quit":
                     result = ctypes.windll.user32.MessageBoxW(None, "ゲームを終了しますか", "終了確認", 4)

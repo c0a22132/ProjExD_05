@@ -3,6 +3,7 @@ import pygame
 import random
 import sys
 import json
+import os
 
 # ゲームの画面サイズ
 WIDTH = 480
@@ -145,6 +146,22 @@ while running:
     clock.tick(60)
 
     if game_over:
+
+        score_file = "ex05/save/score.sdata"
+        if os.path.exists(score_file) == False:
+            with open(score_file, "w", encoding="utf-8") as f:
+                f.write(str(score))
+        else:
+            with open(score_file, "r", encoding="utf-8") as f:
+                score_list = f.readlines()
+                score_list = [int(score) for score in score_list]
+                score_list.append(score)
+                score_list.sort(reverse=True)
+                score_list = score_list[:10]
+            with open(score_file, "w", encoding="utf-8") as f:
+                for score in score_list:
+                    f.write(str(score) + "\n")
+
         show_game_over_screen()
         game_over = False
         all_sprites = pygame.sprite.Group()
@@ -156,6 +173,9 @@ while running:
             enemy = Enemy()
             all_sprites.add(enemy)
             enemies.add(enemy)
+
+        
+
         score = 0  # スコアを初期化
 
     # イベント処理
