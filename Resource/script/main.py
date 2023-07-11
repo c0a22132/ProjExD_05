@@ -147,6 +147,10 @@ while running:
 
     if game_over:
 
+
+
+        show_game_over_screen()
+
         score_file = "ex05/save/score.sdata"
         if os.path.exists(score_file) == False:
             with open(score_file, "w", encoding="utf-8") as f:
@@ -161,8 +165,7 @@ while running:
             with open(score_file, "w", encoding="utf-8") as f:
                 for score in score_list:
                     f.write(str(score) + "\n")
-
-        show_game_over_screen()
+                    
         game_over = False
         all_sprites = pygame.sprite.Group()
         enemies = pygame.sprite.Group()
