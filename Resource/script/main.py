@@ -13,6 +13,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 
+
 # プレイヤークラス
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -192,7 +193,11 @@ while running:
         
 
     # 描画処理
-    screen.fill(BLACK)
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    bg_img = pygame.image.load("ex05/Resource/image/background.jpg")  #画像を読み込む
+    screen.blit(bg_img, [0, 0])  #画像を呼び出す    
+
+
     all_sprites.draw(screen)
     draw_text(screen, "Score: {}".format(score), 18, WIDTH - 50, 10)  # スコアを描画
 
@@ -202,5 +207,8 @@ while running:
         draw_text(screen, "FPS: {}".format(fps), 18, 50, 10)  # FPSを描画
 
     pygame.display.flip()
+
+
+
 
 
