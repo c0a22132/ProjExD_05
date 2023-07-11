@@ -11,13 +11,13 @@
 
 ###ファイル構造
 ex05/
-  ├run.py 実行用プログラム
-  ├Resource/ ゲームの素材等
-      ├script 
-      │  ├titleUI.py タイトル画面
-      │  └main.py ゲームメインコード
-      ├font 
-        ├DotGothic16-Regular.ttf
+*  ├run.py 実行用プログラム
+*  ├Resource/ ゲームの素材等
+*     ├script 
+*     ├titleUI.py タイトル画面
+*     └main.py ゲームメインコード
+*      ├font 
+*      ├DotGothic16-Regular.ttf
       
 ### 担当追加機能
 * ほげほげ
