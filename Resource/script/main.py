@@ -17,8 +17,8 @@ RED = (255, 0, 0)
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.Surface((50, 40))
-        self.image.fill(RED)
+        self.image = pygame.transform.rotozoom(pygame.image.load(f"ex05/Resource/img/INU.png"), 0, 0.25)
+        self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
         self.rect.centerx = WIDTH // 2
         self.rect.bottom = HEIGHT - 10
@@ -60,12 +60,12 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(1, 8)
 
-# 弾クラス
+# サバクラス
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.Surface((10, 20))
-        self.image.fill(WHITE)
+        self.image = pygame.transform.rotozoom(pygame.image.load(f"ex05/Resource/img/究極生命体魚.png"), 0, 0.1)
+        self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.bottom = y
