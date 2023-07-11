@@ -14,7 +14,7 @@ font = pygame.font.Font("ex05/Resource/font/DotGothic16-Regular.ttf", 36)
 
 
 # タイトル画面のUI要素
-title = font.render("タイトル画面", True, (255, 255, 255))
+title = font.render("ドンパチゲーム", True, (255, 255, 255))
 start = font.render("スタート", True, (255, 255, 255))
 score = font.render("スコア", True, (255, 255, 255))
 settings = font.render("設定", True, (255, 255, 255))
@@ -36,6 +36,8 @@ while True:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
+            ##背景を黒にする
+            screen.fill((0, 0, 0))
             if event.key == pygame.K_UP:
                 if selected == "start":
                     selected = "quit"
@@ -58,10 +60,20 @@ while True:
                 if selected == "start":
                     # UnicodeDecodeError: 'cp932' codec can't decode byte 0x96 in position 2201: illegal multibyte sequenceというエラーが出る
                     # 修正済み
+
                     exec(open("ex05/Resource/script/main.py", encoding="utf-8").read())
+                    pygame.quit()
+                    sys.exit()
+
+                elif selected == "score":
+                    exec(open("ex05/Resource/script/score.py", encoding="utf-8").read())
+                    pygame.quit()
+                    sys.exit()
+
                     pass
-                elif selected == "score" or selected == "settings":
+                elif selected == "settings":
                     #実装予定
+                    
                     pass
                 elif selected == "quit":
                     result = ctypes.windll.user32.MessageBoxW(None, "ゲームを終了しますか", "終了確認", 4)

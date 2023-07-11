@@ -3,6 +3,7 @@ import pygame
 import random
 import sys
 import json
+import os
 
 # ゲームの画面サイズ
 WIDTH = 480
@@ -118,7 +119,7 @@ def show_game_over_screen():
     screen.fill(BLACK)
     draw_text(screen, "Game Over", 64, WIDTH // 2, HEIGHT // 4)
     draw_text(screen, "Rキーを押してリトライ", 24, WIDTH // 2, HEIGHT // 2)
-    draw_text(screen, "Eキーを押してタイトル画面へ", 24, WIDTH // 2, HEIGHT // 2 + 30)
+    draw_text(screen, "エスケープキーを押してゲームを終了", 24, WIDTH // 2, HEIGHT // 2 + 30)
     draw_text(screen, "Score: {}".format(score), 30, WIDTH // 2, HEIGHT // 2 + 50)
 
 
@@ -132,8 +133,12 @@ def show_game_over_screen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     waiting = False
-                if event.key == pygame.K_e:
-                    exec(open("ex05/Resource/script/titleUI.py", encoding="utf-8").read())
+
+                ##escキーで終了
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                
 
 
 # ゲームループ
@@ -145,6 +150,27 @@ while running:
     clock.tick(60)
 
     if game_over:
+        ## もしファイルがなければ作成する
+        if not os.path.exists("ex05/save/score.sdata"):
+            with open("ex05/save/score.sdata", "w", encoding="utf-8") as f:
+                for _ in range(10):
+                    f.write("0\n")
+            
+        ## ファイルがあれば読み込む
+        with open("ex05/save/score.sdata", "r", encoding="utf-8") as f:
+            score_list = [int(score) for score in f.readlines()]
+        ## スコアをソートする
+        score_list.sort(reverse=True)
+        ## スコアを更新する
+        if score > score_list[-1]:
+            score_list[-1] = score
+        ## スコアをファイルに書き込む
+        with open("ex05/save/score.sdata", "w", encoding="utf-8") as f:
+            for score in score_list:
+                f.write(str(score) + "\n")
+
+
+
         show_game_over_screen()
         game_over = False
         all_sprites = pygame.sprite.Group()
@@ -156,6 +182,7 @@ while running:
             enemy = Enemy()
             all_sprites.add(enemy)
             enemies.add(enemy)
+        
         score = 0  # スコアを初期化
 
     # イベント処理
