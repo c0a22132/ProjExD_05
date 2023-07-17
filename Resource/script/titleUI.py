@@ -2,6 +2,7 @@ import pygame
 import time
 import sys
 import ctypes
+import os
 
 # 初期化
 pygame.init()
@@ -17,15 +18,16 @@ font = pygame.font.Font("ex05/Resource/font/DotGothic16-Regular.ttf", 36)
 title = font.render("タイトル画面", True, (255, 255, 255))
 start = font.render("スタート", True, (255, 255, 255))
 score = font.render("スコア", True, (255, 255, 255))
-settings = font.render("設定", True, (255, 255, 255))
+#settings = font.render("設定", True, (255, 255, 255))
 quit = font.render("やめる", True, (255, 255, 255))
 
 # UI要素の位置
 title_rect = title.get_rect(center=(400, 200))
 start_rect = start.get_rect(center=(400, 300))
 score_rect = score.get_rect(center=(400, 350))
-settings_rect = settings.get_rect(center=(400, 400))
-quit_rect = quit.get_rect(center=(400, 450))
+#settings_rect = settings.get_rect(center=(400, 400))
+#quit_rect = quit.get_rect(center=(400, 450))
+quit_rect = quit.get_rect(center=(400, 400))
 
 selected = "start"  # 選択された項目の初期値
 
@@ -41,16 +43,18 @@ while True:
                     selected = "quit"
                 elif selected == "score":
                     selected = "start"
-                elif selected == "settings":
+                ##elif selected == "settings":
+                    ##selected = "score"
+                elif selected == "start":
                     selected = "score"
                 elif selected == "quit":
-                    selected = "settings"
+                    selected = "score"
             elif event.key == pygame.K_DOWN:
                 if selected == "start":
                     selected = "score"
                 elif selected == "score":
-                    selected = "settings"
-                elif selected == "settings":
+                    selected = "quit"
+                elif selected == "score":
                     selected = "quit"
                 elif selected == "quit":
                     selected = "start"
@@ -60,8 +64,14 @@ while True:
                     # 修正済み
                     exec(open("ex05/Resource/script/main.py", encoding="utf-8").read())
                     pass
-                elif selected == "score" or selected == "settings":
+                elif selected == "score":
+                    
+                    if os.path.exists("ex05/save/score.sdata") == False:
+                        result = ctypes.windll.user32.MessageBoxW(None, "まだスコアが保存されていません。\n最低でも1回はプレイしてください", "エラー", 0)
+                        pass
                     exec(open("ex05/Resource/script/score.py", encoding="utf-8").read())
+                    pass
+                elif selected == "settings":
                     pass
                 elif selected == "quit":
                     result = ctypes.windll.user32.MessageBoxW(None, "ゲームを終了しますか", "終了確認", 4)
@@ -100,7 +110,7 @@ while True:
     screen.blit(title, title_rect)
     screen.blit(start, start_rect)
     screen.blit(score, score_rect)
-    screen.blit(settings, settings_rect)
+    #screen.blit(settings, settings_rect)
     screen.blit(quit, quit_rect)
 
     pygame.display.flip()
