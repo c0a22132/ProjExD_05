@@ -145,7 +145,7 @@ def show_game_over_screen():
     screen.fill(BLACK)
     draw_text(screen, "Game Over", 64, WIDTH // 2, HEIGHT // 4)
     draw_text(screen, "Rキーを押してリトライ", 24, WIDTH // 2, HEIGHT // 2)
-    draw_text(screen, "Eキーを押して終了", 24, WIDTH // 2, HEIGHT // 2 + 30)
+    draw_text(screen, "Eキーを押してタイトル画面へ", 24, WIDTH // 2, HEIGHT // 2 + 30)
     draw_text(screen, "Score: {}".format(score), 30, WIDTH // 2, HEIGHT // 2 + 50)
 
 
