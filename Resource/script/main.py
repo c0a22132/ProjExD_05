@@ -17,6 +17,7 @@ RED = (255, 0, 0)
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        #　犬表示
         self.image = pygame.transform.rotozoom(pygame.image.load(f"ex05/Resource/img/INU.png"), 0, 0.25)
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
@@ -64,6 +65,7 @@ class Enemy(pygame.sprite.Sprite):
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
+        # サバの画像をロード
         self.image = pygame.transform.rotozoom(pygame.image.load(f"ex05/Resource/img/究極生命体魚.png"), 0, 0.1)
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
