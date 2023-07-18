@@ -1,4 +1,3 @@
-
 import pygame
 import random
 import sys
@@ -60,7 +59,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT + 10:
             self.rect.x = random.randrange(WIDTH - self.rect.width)
             self.rect.y = random.randrange(-100, -40)
-            self.speedy = random.randrange(1, 8)
+            self.speedy = random.randrange(10, 20)
 
 # 弾クラス
 class Bullet(pygame.sprite.Sprite):
@@ -77,6 +76,34 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y += self.speedy
         if self.rect.bottom < 0:
             self.kill()
+
+def save_score(score):
+    score_file = "ex05/save/score.sdata"
+    if os.path.exists(score_file) == False:
+        with open(score_file, "w", encoding="utf-8") as f:
+            f.write(str(score))
+    else:
+        with open(score_file, "r", encoding="utf-8") as f:
+            score_list = f.readlines()
+            score_list = [int(score) for score in score_list]
+            score_list.append(score)
+            score_list.sort(reverse=True)
+            score_list = score_list[:10]
+        with open(score_file, "w", encoding="utf-8") as f:
+            for score in score_list:
+                f.write(str(score) + "\n")
+
+# スコアを読み込む関数
+"""
+def load_score():
+    score_file = "ex05/save/score.sdata"
+    if os.path.exists(score_file):
+        with open(score_file, "r", encoding="utf-8") as f:
+            score_list = f.readlines()
+            score_list = [int(score) for score in score_list]
+            return score_list
+    return []
+"""
 
 # 初期化
 pygame.init()
@@ -150,25 +177,13 @@ last_score_update = pygame.time.get_ticks()  # 最後にスコアを更新した
 score_update_interval = 1000  # スコアを更新する間隔（ミリ秒）
 while running:
     clock.tick(60)
+    print(score)
 
     if game_over:
 
-        score_file = "ex05/save/score.sdata"
-        if os.path.exists(score_file) == False:
-            with open(score_file, "w", encoding="utf-8") as f:
-                f.write(str(score))
-        else:
-            with open(score_file, "r", encoding="utf-8") as f:
-                score_list = f.readlines()
-                score_list = [int(score) for score in score_list]
-                score_list.append(score)
-                score_list.sort(reverse=True)
-                score_list = score_list[:10]
-            with open(score_file, "w", encoding="utf-8") as f:
-                for score in score_list:
-                    f.write(str(score) + "\n")
-
+        save_score(score)
         show_game_over_screen()
+        
                     
         game_over = False
         all_sprites = pygame.sprite.Group()
@@ -229,5 +244,3 @@ while running:
         draw_text(screen, "FPS: {}".format(fps), 18, 50, 10)  # FPSを描画
 
     pygame.display.flip()
-
-
