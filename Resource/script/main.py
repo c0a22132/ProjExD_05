@@ -69,7 +69,6 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.y += self.speedy
         if self.rect.top > HEIGHT + 10:
             self.rect.x = random.randrange(WIDTH - self.rect.width)
-<<<<<<< HEAD
             self.rect.y = random.randrange(-100, -35)
             self.speedy = random.randrange(1, 9)
         if self.enemy_size <= 35:  
@@ -81,12 +80,11 @@ class Enemy(pygame.sprite.Sprite):
         
                 
 # 弾クラス
-=======
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(10, 20)
 
 # サバクラス
->>>>>>> a5aaea33ec4979383383a3ab4d6713eb4e9e74f3
+
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -209,7 +207,7 @@ last_score_update = pygame.time.get_ticks()  # 最後にスコアを更新した
 score_update_interval = 1000  # スコアを更新する間隔（ミリ秒）
 while running:
     clock.tick(60)
-    print(score)
+    #print(score)
 
     if game_over:
 
@@ -284,7 +282,6 @@ while running:
         draw_text(screen, "FPS: {}".format(fps), 18, 50, 10)  # FPSを描画
 
     pygame.display.flip()
-
 
 
 
