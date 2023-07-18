@@ -2,6 +2,8 @@ import pygame
 import random
 import sys
 import json
+import os
+import ctypes
 
 # ゲームの画面サイズ
 WIDTH = 480
@@ -145,7 +147,7 @@ def show_game_over_screen():
     screen.fill(BLACK)
     draw_text(screen, "Game Over", 64, WIDTH // 2, HEIGHT // 4)
     draw_text(screen, "Rキーを押してリトライ", 24, WIDTH // 2, HEIGHT // 2)
-    draw_text(screen, "Eキーを押してタイトル画面へ", 24, WIDTH // 2, HEIGHT // 2 + 30)
+    draw_text(screen, "Eキーを押して終了", 24, WIDTH // 2, HEIGHT // 2 + 30)
     draw_text(screen, "Score: {}".format(score), 30, WIDTH // 2, HEIGHT // 2 + 50)
 
 
@@ -160,7 +162,12 @@ def show_game_over_screen():
                 if event.key == pygame.K_r:
                     waiting = False
                 if event.key == pygame.K_e:
-                    exec(open("ex05/Resource/script/titleUI.py", encoding="utf-8").read())
+                    result = ctypes.windll.user32.MessageBoxW(None, "ゲームを終了しますか", "終了確認", 4)
+                    if result == 6:
+                        pygame.quit()
+                        sys.exit()
+                    elif result ==7:
+                        pass
 
 
 # ゲームループ
@@ -173,6 +180,8 @@ while running:
     print(score)
 
     if game_over:
+
+        save_score(score)
         show_game_over_screen()
         
                     
@@ -186,6 +195,9 @@ while running:
             enemy = Enemy()
             all_sprites.add(enemy)
             enemies.add(enemy)
+
+        
+
         score = 0  # スコアを初期化
 
     # イベント処理

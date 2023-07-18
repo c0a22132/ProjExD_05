@@ -75,3 +75,4 @@ while True:
         exec(open("ex05/Resource/script/titleUI.py", encoding="utf-8").read())
         pygame.quit()
         sys.exit()
+
