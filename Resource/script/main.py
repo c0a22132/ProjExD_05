@@ -62,12 +62,12 @@ class Enemy(pygame.sprite.Sprite):
             self.speedy = random.randrange(1, 9)
         if self.enemy_size <= 35:  
             sircle_enemy = pygame.transform.scale(pygame.image.load(f"ex05/Resource/image/neco2.png"), (self.enemy_size, self.enemy_size))
-            if self.speedy >= 7:  #特定の速さ以上だと画像を回転落下させる
+            if self.speedy >= 5 :  #特定の速さ以上だと画像を回転落下させる
                 self.image = pygame.transform.rotate(sircle_enemy, self.rect.y + self.speedy)  #画像を移動に合わせて回転
             else:
                 self.image = pygame.transform.rotate(sircle_enemy, 0)  #回転阻止
-            
-
+        
+                
 # 弾クラス
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
