@@ -1,9 +1,7 @@
-
 import pygame
 import random
 import sys
 import json
-import os
 
 # ゲームの画面サイズ
 WIDTH = 480
@@ -59,7 +57,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT + 10:
             self.rect.x = random.randrange(WIDTH - self.rect.width)
             self.rect.y = random.randrange(-100, -40)
-            self.speedy = random.randrange(1, 8)
+            self.speedy = random.randrange(10, 20)
 
 # 弾クラス
 class Bullet(pygame.sprite.Sprite):
@@ -76,6 +74,34 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y += self.speedy
         if self.rect.bottom < 0:
             self.kill()
+
+def save_score(score):
+    score_file = "ex05/save/score.sdata"
+    if os.path.exists(score_file) == False:
+        with open(score_file, "w", encoding="utf-8") as f:
+            f.write(str(score))
+    else:
+        with open(score_file, "r", encoding="utf-8") as f:
+            score_list = f.readlines()
+            score_list = [int(score) for score in score_list]
+            score_list.append(score)
+            score_list.sort(reverse=True)
+            score_list = score_list[:10]
+        with open(score_file, "w", encoding="utf-8") as f:
+            for score in score_list:
+                f.write(str(score) + "\n")
+
+# スコアを読み込む関数
+"""
+def load_score():
+    score_file = "ex05/save/score.sdata"
+    if os.path.exists(score_file):
+        with open(score_file, "r", encoding="utf-8") as f:
+            score_list = f.readlines()
+            score_list = [int(score) for score in score_list]
+            return score_list
+    return []
+"""
 
 # 初期化
 pygame.init()
@@ -119,7 +145,7 @@ def show_game_over_screen():
     screen.fill(BLACK)
     draw_text(screen, "Game Over", 64, WIDTH // 2, HEIGHT // 4)
     draw_text(screen, "Rキーを押してリトライ", 24, WIDTH // 2, HEIGHT // 2)
-    draw_text(screen, "エスケープキーを押してゲームを終了", 24, WIDTH // 2, HEIGHT // 2 + 30)
+    draw_text(screen, "Eキーを押して終了", 24, WIDTH // 2, HEIGHT // 2 + 30)
     draw_text(screen, "Score: {}".format(score), 30, WIDTH // 2, HEIGHT // 2 + 50)
 
 
@@ -133,12 +159,8 @@ def show_game_over_screen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     waiting = False
-
-                ##escキーで終了
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-                
+                if event.key == pygame.K_e:
+                    exec(open("ex05/Resource/script/titleUI.py", encoding="utf-8").read())
 
 
 # ゲームループ
@@ -148,30 +170,12 @@ last_score_update = pygame.time.get_ticks()  # 最後にスコアを更新した
 score_update_interval = 1000  # スコアを更新する間隔（ミリ秒）
 while running:
     clock.tick(60)
+    print(score)
 
     if game_over:
-        ## もしファイルがなければ作成する
-        if not os.path.exists("ex05/save/score.sdata"):
-            with open("ex05/save/score.sdata", "w", encoding="utf-8") as f:
-                for _ in range(10):
-                    f.write("0\n")
-            
-        ## ファイルがあれば読み込む
-        with open("ex05/save/score.sdata", "r", encoding="utf-8") as f:
-            score_list = [int(score) for score in f.readlines()]
-        ## スコアをソートする
-        score_list.sort(reverse=True)
-        ## スコアを更新する
-        if score > score_list[-1]:
-            score_list[-1] = score
-        ## スコアをファイルに書き込む
-        with open("ex05/save/score.sdata", "w", encoding="utf-8") as f:
-            for score in score_list:
-                f.write(str(score) + "\n")
-
-
-
         show_game_over_screen()
+        
+                    
         game_over = False
         all_sprites = pygame.sprite.Group()
         enemies = pygame.sprite.Group()
@@ -182,7 +186,6 @@ while running:
             enemy = Enemy()
             all_sprites.add(enemy)
             enemies.add(enemy)
-        
         score = 0  # スコアを初期化
 
     # イベント処理
@@ -229,5 +232,3 @@ while running:
         draw_text(screen, "FPS: {}".format(fps), 18, 50, 10)  # FPSを描画
 
     pygame.display.flip()
-
-
