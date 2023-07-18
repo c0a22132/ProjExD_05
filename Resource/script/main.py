@@ -57,21 +57,36 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.Surface((30, 20))
-        self.image.fill(WHITE)
+        self.enemy_image = pygame.image.load(f"ex05/Resource/image/neco1.png")
+        self.enemy_size = random.randint(30, 50)  #画像のサイズの値の設定
+        self.image = pygame.transform.scale(self.enemy_image, (self.enemy_size, self.enemy_size))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(WIDTH - self.rect.width)
-        self.rect.y = random.randrange(-100, -40)
-        self.speedy = random.randrange(1, 8)
-
+        self.rect.y = random.randrange(-100, -35)
+        self.speedy = random.randrange(1, 9)
+    
     def update(self):
         self.rect.y += self.speedy
         if self.rect.top > HEIGHT + 10:
             self.rect.x = random.randrange(WIDTH - self.rect.width)
+<<<<<<< HEAD
+            self.rect.y = random.randrange(-100, -35)
+            self.speedy = random.randrange(1, 9)
+        if self.enemy_size <= 35:  
+            sircle_enemy = pygame.transform.scale(pygame.image.load(f"ex05/Resource/image/neco2.png"), (self.enemy_size, self.enemy_size))
+            if self.speedy >= 5 :  #特定の速さ以上だと画像を回転落下させる
+                self.image = pygame.transform.rotate(sircle_enemy, self.rect.y + self.speedy)  #画像を移動に合わせて回転
+            else:
+                self.image = pygame.transform.rotate(sircle_enemy, 0)  #回転阻止
+        
+                
+# 弾クラス
+=======
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(10, 20)
 
 # サバクラス
+>>>>>>> a5aaea33ec4979383383a3ab4d6713eb4e9e74f3
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
