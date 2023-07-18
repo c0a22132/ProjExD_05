@@ -5,6 +5,14 @@ import json
 import os
 import ctypes
 
+pygame.mixer.init() # 音の初期化
+
+shoot = pygame.mixer.Sound("ex05/Resource/sound/shoot.mp3") # 射撃音の読み込み
+miss = pygame.mixer.Sound("ex05/Resource/sound/gameover.mp3") # ゲームオーバー音の読み込み
+
+pygame.mixer.music.load("ex05/Resource/sound/bgm.mp3") # BGMの読み込み
+pygame.mixer.music.play(-1) # BGMの再生
+
 # ゲームの画面サイズ
 WIDTH = 480
 HEIGHT = 600
@@ -73,6 +81,10 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.bottom = y
         self.speedy = -10
 
+    def sound():
+    # 発射音
+        shoot.play()
+
     def update(self):
         self.rect.y += self.speedy
         if self.rect.bottom < 0:
@@ -105,6 +117,8 @@ def load_score():
             return score_list
     return []
 """
+
+
 
 # 初期化
 pygame.init()
@@ -200,6 +214,7 @@ while running:
         
 
         score = 0  # スコアを初期化
+        pygame.mixer.music.play(-1) # BGMを流す
 
     # イベント処理
     for event in pygame.event.get():
@@ -208,6 +223,7 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 player.shoot()
+                Bullet.sound()
             elif event.key == pygame.K_F1:
                 show_fps = not show_fps  # F1キーでFPS表示の切り替え
 
@@ -225,6 +241,8 @@ while running:
     # プレイヤーと敵の当たり判定
     hits = pygame.sprite.spritecollide(player, enemies, False)
     if hits:
+        pygame.mixer.music.stop() # BGMを止める
+        miss.play() # ゲームオーバー音
         game_over = True
 
     # スコアを更新
