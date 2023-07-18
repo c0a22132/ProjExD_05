@@ -80,11 +80,6 @@ class Enemy(pygame.sprite.Sprite):
         
                 
 # 弾クラス
-            self.rect.y = random.randrange(-100, -40)
-            self.speedy = random.randrange(10, 20)
-
-# サバクラス
-
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -120,20 +115,6 @@ def save_score(score):
         with open(score_file, "w", encoding="utf-8") as f:
             for score in score_list:
                 f.write(str(score) + "\n")
-
-# スコアを読み込む関数
-"""
-def load_score():
-    score_file = "ex05/save/score.sdata"
-    if os.path.exists(score_file):
-        with open(score_file, "r", encoding="utf-8") as f:
-            score_list = f.readlines()
-            score_list = [int(score) for score in score_list]
-            return score_list
-    return []
-"""
-
-
 
 # 初期化
 pygame.init()
@@ -207,7 +188,6 @@ last_score_update = pygame.time.get_ticks()  # 最後にスコアを更新した
 score_update_interval = 1000  # スコアを更新する間隔（ミリ秒）
 while running:
     clock.tick(60)
-    #print(score)
 
     if game_over:
 
