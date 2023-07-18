@@ -143,7 +143,7 @@ def draw_text(surf, text, size, x, y):
     surf.blit(text_surface, text_rect)
 
 # ゲームオーバー画面を表示する関数
-def show_game_over_screen():
+def show_game_over_screen(): 
     screen.fill(BLACK)
     draw_text(screen, "Game Over", 64, WIDTH // 2, HEIGHT // 4)
     draw_text(screen, "Rキーを押してリトライ", 24, WIDTH // 2, HEIGHT // 2)
