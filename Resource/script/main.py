@@ -1,8 +1,17 @@
-
 import pygame
 import random
 import sys
 import json
+import os
+import ctypes
+
+pygame.mixer.init() # 音の初期化
+
+shoot = pygame.mixer.Sound("ex05/Resource/sound/shoot.mp3") # 射撃音の読み込み
+miss = pygame.mixer.Sound("ex05/Resource/sound/gameover.mp3") # ゲームオーバー音の読み込み
+
+pygame.mixer.music.load("ex05/Resource/sound/bgm.mp3") # BGMの読み込み
+pygame.mixer.music.play(-1) # BGMの再生
 
 # ゲームの画面サイズ
 WIDTH = 480
@@ -12,6 +21,7 @@ HEIGHT = 600
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+
 
 # プレイヤークラス
 class Player(pygame.sprite.Sprite):
@@ -59,7 +69,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT + 10:
             self.rect.x = random.randrange(WIDTH - self.rect.width)
             self.rect.y = random.randrange(-100, -40)
-            self.speedy = random.randrange(1, 8)
+            self.speedy = random.randrange(10, 20)
 
 # サバクラス
 class Bullet(pygame.sprite.Sprite):
@@ -73,10 +83,44 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.bottom = y
         self.speedy = -10
 
+    def sound():
+    # 発射音
+        shoot.play()
+
     def update(self):
         self.rect.y += self.speedy
         if self.rect.bottom < 0:
             self.kill()
+
+def save_score(score):
+    score_file = "ex05/save/score.sdata"
+    if os.path.exists(score_file) == False:
+        with open(score_file, "w", encoding="utf-8") as f:
+            f.write(str(score))
+    else:
+        with open(score_file, "r", encoding="utf-8") as f:
+            score_list = f.readlines()
+            score_list = [int(score) for score in score_list]
+            score_list.append(score)
+            score_list.sort(reverse=True)
+            score_list = score_list[:10]
+        with open(score_file, "w", encoding="utf-8") as f:
+            for score in score_list:
+                f.write(str(score) + "\n")
+
+# スコアを読み込む関数
+"""
+def load_score():
+    score_file = "ex05/save/score.sdata"
+    if os.path.exists(score_file):
+        with open(score_file, "r", encoding="utf-8") as f:
+            score_list = f.readlines()
+            score_list = [int(score) for score in score_list]
+            return score_list
+    return []
+"""
+
+
 
 # 初期化
 pygame.init()
@@ -116,11 +160,11 @@ def draw_text(surf, text, size, x, y):
     surf.blit(text_surface, text_rect)
 
 # ゲームオーバー画面を表示する関数
-def show_game_over_screen():
+def show_game_over_screen(): 
     screen.fill(BLACK)
     draw_text(screen, "Game Over", 64, WIDTH // 2, HEIGHT // 4)
     draw_text(screen, "Rキーを押してリトライ", 24, WIDTH // 2, HEIGHT // 2)
-    draw_text(screen, "Eキーを押してタイトル画面へ", 24, WIDTH // 2, HEIGHT // 2 + 30)
+    draw_text(screen, "Eキーを押して終了", 24, WIDTH // 2, HEIGHT // 2 + 30)
     draw_text(screen, "Score: {}".format(score), 30, WIDTH // 2, HEIGHT // 2 + 50)
 
 
@@ -135,7 +179,12 @@ def show_game_over_screen():
                 if event.key == pygame.K_r:
                     waiting = False
                 if event.key == pygame.K_e:
-                    exec(open("ex05/Resource/script/titleUI.py", encoding="utf-8").read())
+                    result = ctypes.windll.user32.MessageBoxW(None, "ゲームを終了しますか", "終了確認", 4)
+                    if result == 6:
+                        pygame.quit()
+                        sys.exit()
+                    elif result ==7:
+                        pass
 
 
 # ゲームループ
@@ -145,9 +194,14 @@ last_score_update = pygame.time.get_ticks()  # 最後にスコアを更新した
 score_update_interval = 1000  # スコアを更新する間隔（ミリ秒）
 while running:
     clock.tick(60)
+    print(score)
 
     if game_over:
+
+        save_score(score)
         show_game_over_screen()
+        
+                    
         game_over = False
         all_sprites = pygame.sprite.Group()
         enemies = pygame.sprite.Group()
@@ -158,7 +212,11 @@ while running:
             enemy = Enemy()
             all_sprites.add(enemy)
             enemies.add(enemy)
+
+        
+
         score = 0  # スコアを初期化
+        pygame.mixer.music.play(-1) # BGMを流す
 
     # イベント処理
     for event in pygame.event.get():
@@ -167,6 +225,7 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 player.shoot()
+                Bullet.sound()
             elif event.key == pygame.K_F1:
                 show_fps = not show_fps  # F1キーでFPS表示の切り替え
 
@@ -184,6 +243,8 @@ while running:
     # プレイヤーと敵の当たり判定
     hits = pygame.sprite.spritecollide(player, enemies, False)
     if hits:
+        pygame.mixer.music.stop() # BGMを止める
+        miss.play() # ゲームオーバー音
         game_over = True
 
     # スコアを更新
@@ -194,7 +255,11 @@ while running:
         
 
     # 描画処理
-    screen.fill(BLACK)
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    bg_img = pygame.image.load("ex05/Resource/image/background.jpg")  #画像を読み込む
+    screen.blit(bg_img, [0, 0])  #画像を呼び出す    
+
+
     all_sprites.draw(screen)
     draw_text(screen, "Score: {}".format(score), 18, WIDTH - 50, 10)  # スコアを描画
 
@@ -204,5 +269,8 @@ while running:
         draw_text(screen, "FPS: {}".format(fps), 18, 50, 10)  # FPSを描画
 
     pygame.display.flip()
+
+
+
 
 
