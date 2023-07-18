@@ -116,20 +116,6 @@ def save_score(score):
             for score in score_list:
                 f.write(str(score) + "\n")
 
-# スコアを読み込む関数
-"""
-def load_score():
-    score_file = "ex05/save/score.sdata"
-    if os.path.exists(score_file):
-        with open(score_file, "r", encoding="utf-8") as f:
-            score_list = f.readlines()
-            score_list = [int(score) for score in score_list]
-            return score_list
-    return []
-"""
-
-
-
 # 初期化
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
