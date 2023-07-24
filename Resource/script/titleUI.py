@@ -70,12 +70,6 @@ while True:
                     sys.exit()
 
                 elif selected == "score":
-                    exec(open("ex05/Resource/script/score.py", encoding="utf-8").read())
-                    pygame.quit()
-                    sys.exit()
-
-                    pass
-                elif selected == "score":
                     
                     if os.path.exists("ex05/save/score.sdata") == False:
                         result = ctypes.windll.user32.MessageBoxW(None, "まだスコアが保存されていません。\n最低でも1回はプレイしてください", "エラー", 0)
