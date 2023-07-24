@@ -74,8 +74,9 @@ while True:
                     if os.path.exists("ex05/save/score.sdata") == False:
                         result = ctypes.windll.user32.MessageBoxW(None, "まだスコアが保存されていません。\n最低でも1回はプレイしてください", "エラー", 0)
                         pass
-                    exec(open("ex05/Resource/script/score.py", encoding="utf-8").read())
-                    pass
+                    else:
+                        exec(open("ex05/Resource/script/score.py", encoding="utf-8").read())
+                        pass
                 elif selected == "settings":
                     pass
                 elif selected == "quit":
